@@ -5,8 +5,9 @@ public class Main {
         System.out.println("Campo di gioco: \n "+solitaire.toString());
         Scanner input = new Scanner(System.in);
         do {
+            System.out.println("Eccoti il menu del programma:\n1 prendi una carta\n2 sposta una carta dal mazzo alla griglia\n3 sposti le carte dentro la griglia\n4 sposti le carte dal mazzo alla griglia finale\n5 sposti le carte dalla griglia di gioco a quella finale\n6 resetti la partita");
             int destRow, destCol, startRow, startCol, choose=0;
-            //semplice try e catch per controllare che non si mettano robe strane nell'input
+            //Try catch per lo switch case
             try{
                 choose = input.nextInt();
             }
@@ -14,76 +15,87 @@ public class Main {
                 System.out.println("Errore input!");
                 input.next(); //pulisce lo scanner
             }
-//qua
-            //implementato switch case
-
             switch (choose) {
-
-                //Pick 1 card from deck
+                //Prende e mostra 1 carta dal deck
                 case 1:
                     System.out.println("Campo di gioco:\n"+solitaire.toString());
-                    System.out.println("\nI quattro mazzi: \n"+solitaire.toStringFinalGrid());
-               /*   solitaire.pickCard();solitaire.pickCard();solitaire.pickCard();solitaire.pickCard();solitaire.pickCard();
-                    solitaire.pickCard();solitaire.pickCard();solitaire.pickCard();solitaire.pickCard();solitaire.pickCard();
-                    solitaire.pickCard();solitaire.pickCard();solitaire.pickCard();solitaire.pickCard();solitaire.pickCard();
-                    solitaire.pickCard();solitaire.pickCard();solitaire.pickCard();solitaire.pickCard();solitaire.pickCard();
-                    solitaire.pickCard();solitaire.pickCard();solitaire.pickCard();solitaire.pickCard();
-                    solitaire.deckSize();*/
                     solitaire.showCard();
-                    break;
-
-                //Pick card from deck and move to field
+                break;
+                //Dal deck al campo
                 case 2:
+                    try {
+                        System.out.println("Inserisci riga");
                         destRow = input.nextInt();
+                        System.out.println("Inserisci colonna");
                         destCol = input.nextInt();
                         solitaire.moveCardFromDeck(destRow, destCol);
                         System.out.println(solitaire.toString());
                         solitaire.showCard();
+                    }catch (Exception e){
+                        System.out.println("Errore nell'input");
+                    }
 
-                    break;
-
-                //Move card inside field
+                break;
+                //Spostamento carte all'interno del campo
+                case 3:
+                    try {
+                        System.out.println("Inserisci riga della carta che vuoi selezionare");
+                        startRow = input.nextInt();
+                        System.out.println("Inserisci colonna della carta che vuoi selezionare");
+                        startCol = input.nextInt();
+                        System.out.println("Inserisci riga di destinazione");
+                        destRow = input.nextInt();
+                        System.out.println("Inserisci colonna di destinazione");
+                        destCol = input.nextInt();
+                        solitaire.moveCards(startRow,startCol,destRow,destCol);
+                        System.out.println(solitaire.toString());
+                        solitaire.showCard();
+                    }catch (Exception e){
+                        input.next();
+                        System.out.println("Errore nell'input");
+                    }
+                break;
+                //Dal deck alla griglia finale
+                case 4:
+                    try {
+                        System.out.println("Inserisci colonna della griglia finale");
+                        destCol = input.nextInt();
+                        solitaire.moveFromDeckToFinalGrid(destCol);
+                        System.out.println(solitaire.toString());
+                        solitaire.showCard();
+                    }catch (Exception e){
+                        input.next();
+                        System.out.println("Errore nell'input");
+                    }
+                break;
+                //Dalla griglia di gioco alla griglia finale
                 case 5:
-                    startRow = input.nextInt();
-                    startCol = input.nextInt();
-                    destRow = input.nextInt();
-                    destCol = input.nextInt();
-                    solitaire.moveCards(startRow,startCol,destRow,destCol);
-                    System.out.println(solitaire.toString());
-                    solitaire.showCard();
+                    try {
+                        System.out.println("Inserisci riga della carta che vuoi selezionare");
+                        startRow = input.nextInt();
+                        System.out.println("Inserisci colonna della carta che vuoi selezionare");
+                        startCol = input.nextInt();
+                        System.out.println("Inserisci colonna della griglia finale");
+                        destCol = input.nextInt();
+                        solitaire.moveCardToFinalGrid(startRow,startCol,destCol);
+                        System.out.println("Campo di gioco:\n"+solitaire.toString());
+                        solitaire.showCard();
+                    }catch (Exception e){
+                        input.next();
+                        System.out.println("Errore nell'input");
+                    }
                     break;
+                //Reset della partita
                 case 6:
-                    destCol = input.nextInt();
-                    solitaire.moveFromDeckToFinalGrid(destCol);
-                    System.out.println(solitaire.toString());
-                    System.out.println(solitaire.toStringFinalGrid());
-                    solitaire.showCard();
-                    break;
-                case 7:
-                    startRow = input.nextInt();
-                    startCol = input.nextInt();
-                    destCol = input.nextInt();
-                    solitaire.moveCardToFinalGrid(startRow,startCol,destCol);
+                    solitaire=new Game();
                     System.out.println("Campo di gioco:\n"+solitaire.toString());
-                    System.out.println("\nI quattro mazzi: \n"+solitaire.toStringFinalGrid());
-                    solitaire.showCard();
-                    break;
-
-
+                break;
+                //Default nel caso di input erronei
                 default:
                     System.out.println("Qualcosa è andato storto");
-                    break;
+                break;
 
             }
-                /*}else if (choose == 3) {
-                int x = s.nextInt();//riga inizio pila
-                int y = s.nextInt();// colonna inizio pila
-                int k = s.nextInt();// colonna fine pila
-                //g.cardGroup(x,y,k);
-                int i = s.nextInt();// riga finale
-                int j = s.nextInt();// colonna finale
-                g.moveCardGroup(x,y,k, i,j);
-                System.out.println(g.toString());*/
         }while (!solitaire.win());
     }
 }

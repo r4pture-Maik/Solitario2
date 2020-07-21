@@ -1,22 +1,24 @@
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Stack;
+
 public class Game {
     private LinkedList<Card> gameDeck;
-    private LinkedList<Card> auxDeck;
+    private Stack<Card> auxDeck;
     private Card[][] gameField;
     private Card[][] finalDecks;
 
     public Game(){
         Deck cards = new Deck();
-        auxDeck = new LinkedList<>();
+        auxDeck = new Stack();
         gameField = new Card[20][7];
         finalDecks = new Card[13][4];
         gameDeck = cards.getDeck();
         Collections.shuffle(gameDeck);
         startGame();
-
     }
+
     private void startGame2() {
         this.gameField[0][0] = new Card(Card.Seed.PICCHE, Card.Value.RE,13, Card.Color.NERO);
         this.gameField[0][0].setHidden(false);
@@ -39,7 +41,7 @@ public class Game {
     private void startGame(){
         for (int i = 0; i <= 6; i++){
             for (int j = i; j <= 6; j++){
-                this.gameField[i][j] = this.gameDeck.pop();//tolto l'else in quanto superfluo
+                this.gameField[i][j] = this.gameDeck.pop();
                 if (j==i){
                     this.gameField[i][j].setHidden(false);
                 }
@@ -48,18 +50,17 @@ public class Game {
     }
     //Mostra se presente l'ultima carta del deck ausiliario
     public void showCard(){
-        //se non è vuoto allora:
         pickCard();
-        if(!auxDeck.isEmpty()) {System.out.println(auxDeck.peek());} //stampala
+        if(!auxDeck.isEmpty()) {System.out.println("Ultima carta pescata: "+auxDeck.peek());} //stampala
     }
-//Pesca una carta dal deck principale al deck ausiliario
+    //Pesca una carta dal deck principale al deck ausiliario
     private void pickCard() {
         Iterator<Card> iterator = auxDeck.iterator();
         if (gameDeck.isEmpty()) {
             while (iterator.hasNext()) {
                 Card c = iterator.next();
                 c.setHidden(true);
-                gameDeck.addFirst(c);
+                gameDeck.addLast(c);
             }
             auxDeck.clear();
         }
@@ -181,24 +182,20 @@ public class Game {
             for (int j = 0; j < this.gameField[i].length; j++) {
                 String value = this.gameField[i][j] != null ?
                         String.valueOf(this.gameField[i][j]) /*"card"*/ : "               ";
-                result += "[" + i + "-" + j + value + "]";
+                result += "[" + i + "-" + j + " " + value + "]";
             }
             result += "]";
         }
-        return result;
-    }
-
-    public String toStringFinalGrid() {
-        String result = "";
+        String finalDecks = "";
         for (int i = 0; i < this.finalDecks.length; i++) {
-            result += "\n[";
+            finalDecks += "\n[";
             for (int j = 0; j < this.finalDecks[i].length; j++) {
                 String value = this.finalDecks[i][j] != null ?
                         String.valueOf(this.finalDecks[i][j]) /*"card"*/ : "               ";
-                result += "["  + i + "-" + j + " " + value + "]";
+                finalDecks += "[" + i + "-" + j + " " + value + "]";
             }
-            result += "]";
+            finalDecks += "]";
         }
-        return result;
+        return finalDecks + "\n" + result;
     }
 }
