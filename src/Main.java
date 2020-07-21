@@ -35,6 +35,7 @@ public class Main {
                         System.out.println("Errore nell'input");
                     }
 
+
                 break;
                 //Spostamento carte all'interno del campo
                 case 3:
