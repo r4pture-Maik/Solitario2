@@ -1,3 +1,4 @@
+import java.util.Collections;
 import java.util.Stack;
 public class Game {
     private Stack<Card> gameDeck;
@@ -11,8 +12,8 @@ public class Game {
         gameField = new Card[20][7];
         finalDecks = new Card[13][4];
         gameDeck = cards.getDeck();
-        //Collections.shuffle(gameDeck);
-        startGame2();
+        Collections.shuffle(gameDeck);
+        startGame();
 
     }
 
@@ -29,6 +30,10 @@ public class Game {
         this.gameField[0][1].setHidden(false);
         this.gameField[0][2] = new Card(Card.Seed.PICCHE, Card.Value.FANTE,11, Card.Color.NERO);
         this.gameField[0][2].setHidden(false);
+        this.gameField[0][3] = new Card(Card.Seed.PICCHE, Card.Value.ASSO,1, Card.Color.NERO);
+        this.gameField[0][3].setHidden(false);
+        this.gameField[0][4] = new Card(Card.Seed.PICCHE, Card.Value.DUE,2, Card.Color.NERO);
+        this.gameField[0][4].setHidden(false);
     }
 
 
@@ -79,28 +84,29 @@ public class Game {
 
     //Metodo che ritorna true se la carta da muovere sarà posizionata sopra una carta con colore diverso e valore maggiore di 1
     public boolean canMoveCard(Card c, int destRow, int destCol) throws ArrayIndexOutOfBoundsException{
-        if (destRow==0 &&
+        if((destRow==0 && c.getValues() != Card.Value.RE) || (destCol>6 || destCol<0) || (destRow>20 || destRow<0) ){
+            return false;
+        }else return destRow == 0 && c.getValues() == Card.Value.RE
+                ||
+                this.gameField[destRow - 1][destCol] != null &&
+                c != null &&
+                c.getColor() != this.gameField[destRow - 1][destCol].getColor() &&
+                c.getRealCardValue() == this.gameField[destRow - 1][destCol].getRealCardValue() - 1 &&
+                this.gameField[destRow][destCol] == null;
+    }
+
+    /*destRow==0 &&
                 c != null &&
                 this.gameField[destRow][destCol] == null &&
-                c.getValues()==Card.Value.RE && //Aggiunta la condizione che nella riga zero deve stare solo il RE
+                c.getValues() == Card.Value.RE && //Aggiunta la condizione che nella riga zero deve stare solo il RE
                 !c.getHidden()
                 // Qui non ho trovato molte informazioni in alcune versioni devi mettere il RE e in altri si mette la prima carta pescata
-                || //Dato che i due if ritornano entrambi true li ho messi in OR
-                this.gameField[destRow-1][destCol] != null &&
-                        c != null &&
-                        c.getColor() != this.gameField[destRow-1][destCol].getColor() &&
-                        c.getRealCardValue() == this.gameField[destRow-1][destCol].getRealCardValue()-1 &&
-                        this.gameField[destRow][destCol] == null &&
-                        destCol >= 0 &&
-                        destCol <= 6) {
-            return true;
-        } else return false;
-    }
+                ||*/ //Dato che i due if ritornano entrambi true li ho messi in OR
 
 
     //Metodo che sposta le carte dal mazzo ausiliario alla griglia di gioco
     public void moveCardFromDeck(int destRow, int destCol) throws ArrayIndexOutOfBoundsException{
-        if (canMoveCard(auxDeck.peek(), destRow, destCol)){
+        if (!this.auxDeck.isEmpty() && canMoveCard(auxDeck.peek(), destRow, destCol)){
             this.gameField[destRow][destCol] = auxDeck.pop();
         }else System.out.println("Mossa non valida");
     }
@@ -120,7 +126,7 @@ public class Game {
 
     //Si deve fare si che si sceglie la carta e poi solo la colonna di destinazione
     // Per ora funziona
-    public void moveCardGroup(int rowStart, int colStart, int rowDest, int colDest){
+    public void moveCards(int rowStart, int colStart, int rowDest, int colDest){
         if ((rowStart >= 0 && rowStart < this.gameField.length)
                 && (colStart >= 0 && colStart < this.gameField[rowStart].length)){
             if (canMoveCard(this.gameField[rowStart][colStart], rowDest, colDest)){//soloto controllo tra la  posizione originale e la finake
@@ -135,6 +141,75 @@ public class Game {
                 }while(this.gameField[rowStart][colStart]!=null);
             }else System.out.println("Mossa non valida");
         }else System.out.println("Hai scelto qualcosa di sbagliato!");
+    }
+
+    public int whichRow(int destCol){
+        int destRow=0;
+        if (destCol > 0 && destCol < this.finalDecks[destRow].length) {
+            for (destRow = 0; destRow < this.finalDecks.length; destRow++) {
+                if (this.finalDecks[destRow][destCol] == null) {
+                    return destRow;
+                }
+            }
+        }
+        return destRow=this.finalDecks.length;
+    }
+
+    public boolean canMoveToFinalGrid(Card c, int destCol) throws ArrayIndexOutOfBoundsException {
+        if ((destCol > 4 || destCol < 0) || (this.finalDecks[0][destCol] == null && c.getValues() != Card.Value.ASSO))
+        {
+            return false;
+        }else { int destRow=whichRow(destCol);
+                System.out.println(destRow);
+                if (destRow == 0 && c.getValues() == Card.Value.ASSO
+                    ||
+                    this.finalDecks[destRow][destCol] == null &&
+                    //Aggiunta la condizione che nella riga zero deve stare solo l'asso
+                    !c.getHidden() &&        // Qui non ho trovato molte informazioni in alcune versioni devi mettere il RE e in altri si mette la prima carta pescata                this.finalDecks[destRow - 1][destCol] != null &&
+                    //c != null &&
+                    c.getColor() == this.finalDecks[destRow - 1][destCol].getColor() &&
+                    c.getSeeds() == this.finalDecks[destRow - 1][destCol].getSeeds() &&
+                    c.getRealCardValue() == this.finalDecks[destRow - 1][destCol].getRealCardValue() + 1 &&
+                    this.finalDecks[destRow][destCol] == null) {
+                    return true;
+                }
+            }
+        return false;
+    }
+
+    public void moveFromDeckToFinalGrid(int destCol) throws ArrayIndexOutOfBoundsException{
+        if (canMoveToFinalGrid(auxDeck.peek(), destCol)){
+            this.finalDecks[whichRow(destCol)][destCol] = auxDeck.pop();
+        }else System.out.println("Mossa non valida");
+    }
+
+    public void moveCardToFinalGrid(int rowStart, int colStart, int colDest){
+        if ((rowStart >= 0 && rowStart < this.gameField.length)
+                && (colStart >= 0 && colStart < this.gameField[rowStart].length)){
+               int rowDest=whichRow(colDest);
+            if (canMoveToFinalGrid(this.gameField[rowStart][colStart], colDest)){//soloto controllo tra la  posizione originale e la finake
+                if (rowStart > 0) {//se non siamo nella prima riga
+                    this.gameField[rowStart - 1][colStart].setHidden(false);//imposta la carta precedente come visibile
+                }
+                do {//continua a spostare le carte finchè non trovi uno slot vuoto
+                    this.finalDecks[rowDest][colDest]=this.gameField[rowStart][colStart];
+                    this.gameField[rowStart][colStart]=null;//libera gli slot dove avevamo le carte
+                    rowStart ++;
+                    rowDest ++;
+                }while(this.gameField[rowStart][colStart]!=null);
+            }else System.out.println("Mossa non valida");
+        }else System.out.println("Hai scelto qualcosa di sbagliato!");
+    }
+
+    public boolean win(){
+        for (int x = 0; x < this.finalDecks.length; x++){
+            for (int y = 0; y < this.finalDecks[x].length; y++){
+                if (this.finalDecks[x][y] != null){
+                    System.out.println("yuppi");
+                    return true;
+                }
+            }
+        }return false;
     }
 
 
@@ -153,4 +228,21 @@ public class Game {
         }
         return result;
     }
+
+    public String toStringFinalGrid() {
+        String result = "";
+        for (int i = 0; i < this.finalDecks.length; i++) {
+            result += "\n[";
+            for (int j = 0; j < this.finalDecks[i].length; j++) {
+                String value = this.finalDecks[i][j] != null ?
+                        String.valueOf(this.finalDecks[i][j]) /*"card"*/ : "               ";
+                result += "["  + i + "-" + j + " " + value + "]";
+            }
+            result += "]";
+        }
+        return result;
+    }
+
+
+
 }

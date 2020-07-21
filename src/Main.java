@@ -21,6 +21,7 @@ public class Main {
                 //Pick 1 card from deck
                 case 1:
                     System.out.println(solitaire.toString());
+                    System.out.println(solitaire.toStringFinalGrid());
                     solitaire.pickCard();
                     solitaire.showCard();
                     break;
@@ -40,8 +41,26 @@ public class Main {
                     startCol = input.nextInt();
                     destRow = input.nextInt();
                     destCol = input.nextInt();
-                    solitaire.moveCardGroup(startRow,startCol,destRow,destCol);
+                    solitaire.moveCards(startRow,startCol,destRow,destCol);
                     System.out.println(solitaire.toString());
+                    solitaire.showCard();
+                    break;
+                case 6:
+                    destCol = input.nextInt();
+                    solitaire.moveFromDeckToFinalGrid(destCol);
+                    System.out.println(solitaire.whichRow(destCol));
+                    System.out.println(solitaire.toString());
+                    System.out.println(solitaire.toStringFinalGrid());
+                    solitaire.showCard();
+                    break;
+                case 7:
+                    startRow = input.nextInt();
+                    startCol = input.nextInt();
+                    destCol = input.nextInt();
+                    solitaire.moveCardToFinalGrid(startRow,startCol,destCol);
+                    System.out.println(solitaire.whichRow(destCol));
+                    System.out.println(solitaire.toString());
+                    System.out.println(solitaire.toStringFinalGrid());
                     solitaire.showCard();
                     break;
 
@@ -60,6 +79,6 @@ public class Main {
                 int j = s.nextInt();// colonna finale
                 g.moveCardGroup(x,y,k, i,j);
                 System.out.println(g.toString());*/
-        }while (true);
+        }while (!solitaire.win());
     }
 }
