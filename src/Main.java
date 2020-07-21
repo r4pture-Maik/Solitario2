@@ -2,7 +2,7 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Game solitaire = new Game();
-        System.out.println(solitaire.toString());
+        System.out.println("Campo di gioco: \n "+solitaire.toString());
         Scanner input = new Scanner(System.in);
         do {
             int destRow, destCol, startRow, startCol, choose=0;
@@ -16,23 +16,32 @@ public class Main {
             }
 //qua
             //implementato switch case
+
             switch (choose) {
 
                 //Pick 1 card from deck
                 case 1:
-                    System.out.println(solitaire.toString());
-                    System.out.println(solitaire.toStringFinalGrid());
+                    //System.out.println("Campo di gioco:\n"+solitaire.toString());
+                    //System.out.println("\nI quattro mazzi: \n"+solitaire.toStringFinalGrid());
+                    solitaire.pickCard();solitaire.pickCard();solitaire.pickCard();solitaire.pickCard();solitaire.pickCard();
+                    solitaire.pickCard();solitaire.pickCard();solitaire.pickCard();solitaire.pickCard();solitaire.pickCard();
+                    solitaire.pickCard();solitaire.pickCard();solitaire.pickCard();solitaire.pickCard();solitaire.pickCard();
+                    solitaire.pickCard();solitaire.pickCard();solitaire.pickCard();solitaire.pickCard();solitaire.pickCard();
+                    solitaire.pickCard();solitaire.pickCard();solitaire.pickCard();solitaire.pickCard();
+                    solitaire.deckSize();
                     solitaire.pickCard();
-                    solitaire.showCard();
+                    //solitaire.showCard();
                     break;
 
                 //Pick card from deck and move to field
                 case 2:
-                    destRow = input.nextInt();
-                    destCol = input.nextInt();
-                    solitaire.moveCardFromDeck(destRow, destCol);
-                    System.out.println(solitaire.toString());
-                    solitaire.showCard();
+
+                        destRow = input.nextInt();
+                        destCol = input.nextInt();
+                        solitaire.moveCardFromDeck(destRow, destCol);
+                        System.out.println(solitaire.toString());
+                        solitaire.showCard();
+
                     break;
 
                 //Move card inside field
@@ -58,9 +67,8 @@ public class Main {
                     startCol = input.nextInt();
                     destCol = input.nextInt();
                     solitaire.moveCardToFinalGrid(startRow,startCol,destCol);
-                    System.out.println(solitaire.whichRow(destCol));
-                    System.out.println(solitaire.toString());
-                    System.out.println(solitaire.toStringFinalGrid());
+                    System.out.println("Campo di gioco:\n"+solitaire.toString());
+                    System.out.println("\nI quattro mazzi: \n"+solitaire.toStringFinalGrid());
                     solitaire.showCard();
                     break;
 

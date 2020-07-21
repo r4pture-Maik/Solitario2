@@ -36,7 +36,10 @@ public class Game {
         this.gameField[0][4].setHidden(false);
     }
 
-
+    public void deckSize(){
+        System.out.println(this.gameDeck.size());
+        System.out.println(this.auxDeck.size());
+    }
     // metodo che inizializza la griglia a inizio gioco
     private void startGame(){
         for (int i = 0; i <= 6; i++){
@@ -74,12 +77,15 @@ public class Game {
 
     public void pickCard(){
         if (gameDeck.isEmpty()){ //se il mazzo principale è vuoto, riempilo con le carte del mazzo ausiliario
-            for (int i = 0; i<=auxDeck.size(); i++){
-                gameDeck.push(auxDeck.pop());
+            for (int i = auxDeck.size(); i<=0; i--){
+                gameDeck.add( i , auxDeck.pop());
+
             }
+        }else {
+            auxDeck.push(gameDeck.pop()); //togli una carta dal mazzo principale e mettila nell'ausiliario
+            auxDeck.peek().setHidden(false);
+            System.out.println(auxDeck.peek());// imposta l'ultima carta dell'ausiliario come scoperta
         }
-        auxDeck.push(gameDeck.pop()); //togli una carta dal mazzo principale e mettila nell'ausiliario
-        auxDeck.peek().setHidden(false); // imposta l'ultima carta dell'ausiliario come scoperta
     }
 
     //Metodo che ritorna true se la carta da muovere sarà posizionata sopra una carta con colore diverso e valore maggiore di 1
@@ -202,14 +208,15 @@ public class Game {
     }
 
     public boolean win(){
-        for (int x = 0; x < this.finalDecks.length; x++){
-            for (int y = 0; y < this.finalDecks[x].length; y++){
-                if (this.finalDecks[x][y] != null){
+        for (Card[] finalDeck : this.finalDecks) {
+            for (Card card : finalDeck) {
+                if (card != null) {
                     System.out.println("yuppi");
                     return true;
                 }
             }
-        }return false;
+        }
+        return false;
     }
 
 
@@ -222,7 +229,7 @@ public class Game {
             for (int j = 0; j < this.gameField[i].length; j++) {
                 String value = this.gameField[i][j] != null ?
                         String.valueOf(this.gameField[i][j]) /*"card"*/ : "               ";
-                result += "[" + value +i+j+ "]";
+                result += "[" + i + "-" + j + value + "]";
             }
             result += "]";
         }
