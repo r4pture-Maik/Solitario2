@@ -1,9 +1,10 @@
+import java.util.LinkedList;
 import java.util.Stack;
 public class Deck{
-    private Stack<Card> cardDeck ;
+    private LinkedList<Card> cardDeck ;
 
     public Deck(){
-        this.cardDeck= new Stack<>();
+        this.cardDeck= new LinkedList<>();
         createDeck();
     }
 
@@ -22,7 +23,7 @@ public class Deck{
             }
         }
     }
-    public Stack getDeck(){
+    public LinkedList getDeck(){
         return this.cardDeck;
     }
     public String showDeck(){

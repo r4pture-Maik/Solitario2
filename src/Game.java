@@ -1,14 +1,15 @@
 import java.util.Collections;
-import java.util.Stack;
+import java.util.Iterator;
+import java.util.LinkedList;
 public class Game {
-    private Stack<Card> gameDeck;
-    private Stack<Card> auxDeck;
+    private LinkedList<Card> gameDeck;
+    private LinkedList<Card> auxDeck;
     private Card[][] gameField;
     private Card[][] finalDecks;
 
     public Game(){
         Deck cards = new Deck();
-        auxDeck = new Stack<>();
+        auxDeck = new LinkedList<>();
         gameField = new Card[20][7];
         finalDecks = new Card[13][4];
         gameDeck = cards.getDeck();
@@ -16,7 +17,6 @@ public class Game {
         startGame();
 
     }
-
     private void startGame2() {
         this.gameField[0][0] = new Card(Card.Seed.PICCHE, Card.Value.RE,13, Card.Color.NERO);
         this.gameField[0][0].setHidden(false);
@@ -35,12 +35,7 @@ public class Game {
         this.gameField[0][4] = new Card(Card.Seed.PICCHE, Card.Value.DUE,2, Card.Color.NERO);
         this.gameField[0][4].setHidden(false);
     }
-
-    public void deckSize(){
-        System.out.println(this.gameDeck.size());
-        System.out.println(this.auxDeck.size());
-    }
-    // metodo che inizializza la griglia a inizio gioco
+    //Metodo che inizializza la griglia a inizio gioco
     private void startGame(){
         for (int i = 0; i <= 6; i++){
             for (int j = i; j <= 6; j++){
@@ -51,45 +46,29 @@ public class Game {
             }
         }
     }
-
-    /* metodo che se invocato mostra l'ultima carta del mazzo principale, la sposta in un mazzo ausiliario
-       se il mazzo principale è vuoto, verrà rimpiazzato dal mazzo ausiliario che verrà azzerato.
-       Appunti: array circolare per il gamedeck.
-       Cambiare l'input dello spostamento: da riga e colonna a solo colonna di destinazione
-       Appunti2 parte 2: migliorare l'indentazione che ora fa schifo
-     */
-
-
-    /*public Card showCard(){
-        if (gameDeck.size()==0) {
-            gameDeck = auxDeck;
-            auxDeck.clear();
-        }
-            auxDeck.push(gameDeck.pop());
-            auxDeck.peek().setHidden(false);
-            System.out.println(auxDeck.peek());
-            return auxDeck.peek();
-    }*/
+    //Mostra se presente l'ultima carta del deck ausiliario
     public void showCard(){
         //se non è vuoto allora:
+        pickCard();
         if(!auxDeck.isEmpty()) {System.out.println(auxDeck.peek());} //stampala
     }
-
-    public void pickCard(){
-        if (gameDeck.isEmpty()){ //se il mazzo principale è vuoto, riempilo con le carte del mazzo ausiliario
-            for (int i = auxDeck.size(); i<=0; i--){
-                gameDeck.add( i , auxDeck.pop());
-
+//Pesca una carta dal deck principale al deck ausiliario
+    private void pickCard() {
+        Iterator<Card> iterator = auxDeck.iterator();
+        if (gameDeck.isEmpty()) {
+            while (iterator.hasNext()) {
+                Card c = iterator.next();
+                c.setHidden(true);
+                gameDeck.addFirst(c);
             }
-        }else {
-            auxDeck.push(gameDeck.pop()); //togli una carta dal mazzo principale e mettila nell'ausiliario
-            auxDeck.peek().setHidden(false);
-            System.out.println(auxDeck.peek());// imposta l'ultima carta dell'ausiliario come scoperta
+            auxDeck.clear();
         }
+        auxDeck.push(gameDeck.pop()); //togli una carta dal mazzo principale e mettila nell'ausiliario
+        auxDeck.peek().setHidden(false);
     }
 
     //Metodo che ritorna true se la carta da muovere sarà posizionata sopra una carta con colore diverso e valore maggiore di 1
-    public boolean canMoveCard(Card c, int destRow, int destCol) throws ArrayIndexOutOfBoundsException{
+    private boolean canMoveCard(Card c, int destRow, int destCol) throws ArrayIndexOutOfBoundsException{
         if((destRow==0 && c.getValues() != Card.Value.RE) || (destCol>6 || destCol<0) || (destRow>20 || destRow<0) ){
             return false;
         }else return destRow == 0 && c.getValues() == Card.Value.RE
@@ -101,45 +80,21 @@ public class Game {
                 this.gameField[destRow][destCol] == null;
     }
 
-    /*destRow==0 &&
-                c != null &&
-                this.gameField[destRow][destCol] == null &&
-                c.getValues() == Card.Value.RE && //Aggiunta la condizione che nella riga zero deve stare solo il RE
-                !c.getHidden()
-                // Qui non ho trovato molte informazioni in alcune versioni devi mettere il RE e in altri si mette la prima carta pescata
-                ||*/ //Dato che i due if ritornano entrambi true li ho messi in OR
-
-
-    //Metodo che sposta le carte dal mazzo ausiliario alla griglia di gioco
+    //Dal deck ausiliario al campo di gioco
     public void moveCardFromDeck(int destRow, int destCol) throws ArrayIndexOutOfBoundsException{
         if (!this.auxDeck.isEmpty() && canMoveCard(auxDeck.peek(), destRow, destCol)){
             this.gameField[destRow][destCol] = auxDeck.pop();
         }else System.out.println("Mossa non valida");
     }
 
-    //Metodo che sposta le carte all'interno della griglia di gioco **OBSOLETO**
- /*   public void moveCardFromGrid(int rowStart, int colStart, int rowDest, int colDest) throws ArrayIndexOutOfBoundsException{
-        if ((rowStart >= 0 && rowStart < this.gameField.length)
-            && (colStart >= 0 && colStart < this.gameField[rowStart].length)){
-
-            if (canMoveCard(this.gameField[rowStart][colStart], rowDest, colDest) && this.gameField[rowStart+1][colStart]==null){
-                this.gameField[rowDest][colDest] = this.gameField[rowStart][colStart];
-                this.gameField[rowStart][colStart] = null;
-
-        }
-        }else System.out.println("Mossa non valida");
-    }*/
-
-    //Si deve fare si che si sceglie la carta e poi solo la colonna di destinazione
-    // Per ora funziona
+    //Muove le carte dentro il campo
     public void moveCards(int rowStart, int colStart, int rowDest, int colDest){
         if ((rowStart >= 0 && rowStart < this.gameField.length)
                 && (colStart >= 0 && colStart < this.gameField[rowStart].length)){
             if (canMoveCard(this.gameField[rowStart][colStart], rowDest, colDest)){//soloto controllo tra la  posizione originale e la finake
                 if (rowStart > 0) {//se non siamo nella prima riga
                     this.gameField[rowStart - 1][colStart].setHidden(false);//imposta la carta precedente come visibile
-                }
-                do {//continua a spostare le carte finchè non trovi uno slot vuoto
+                }do {//continua a spostare le carte finchè non trovi uno slot vuoto
                     this.gameField[rowDest][colDest]=this.gameField[rowStart][colStart];
                     this.gameField[rowStart][colStart]=null;//libera gli slot dove avevamo le carte
                     rowStart ++;
@@ -148,8 +103,8 @@ public class Game {
             }else System.out.println("Mossa non valida");
         }else System.out.println("Hai scelto qualcosa di sbagliato!");
     }
-
-    public int whichRow(int destCol){
+    //Trova una riga libera dentro una colonna del deck finale
+    private int whichRow(int destCol){
         int destRow=0;
         if (destCol > 0 && destCol < this.finalDecks[destRow].length) {
             for (destRow = 0; destRow < this.finalDecks.length; destRow++) {
@@ -160,8 +115,8 @@ public class Game {
         }
         return destRow=this.finalDecks.length;
     }
-
-    public boolean canMoveToFinalGrid(Card c, int destCol) throws ArrayIndexOutOfBoundsException {
+    //Metodo di controllo se può mettere una carta all'interno del deck finale
+    private boolean canMoveToFinalGrid(Card c, int destCol) throws ArrayIndexOutOfBoundsException {
         if ((destCol > 4 || destCol < 0) || (this.finalDecks[0][destCol] == null && c.getValues() != Card.Value.ASSO))
         {
             return false;
@@ -182,13 +137,13 @@ public class Game {
             }
         return false;
     }
-
+    //Dalla carta pescata al deck finale
     public void moveFromDeckToFinalGrid(int destCol) throws ArrayIndexOutOfBoundsException{
         if (canMoveToFinalGrid(auxDeck.peek(), destCol)){
             this.finalDecks[whichRow(destCol)][destCol] = auxDeck.pop();
         }else System.out.println("Mossa non valida");
     }
-
+    //Dal campo alla griglia finale
     public void moveCardToFinalGrid(int rowStart, int colStart, int colDest){
         if ((rowStart >= 0 && rowStart < this.gameField.length)
                 && (colStart >= 0 && colStart < this.gameField[rowStart].length)){
@@ -206,7 +161,7 @@ public class Game {
             }else System.out.println("Mossa non valida");
         }else System.out.println("Hai scelto qualcosa di sbagliato!");
     }
-
+    //Metodo che controlla se hai vinto o meno
     public boolean win(){
         for (Card[] finalDeck : this.finalDecks) {
             for (Card card : finalDeck) {
@@ -215,13 +170,10 @@ public class Game {
                     return true;
                 }
             }
-        }
-        return false;
+        }return false;
     }
 
-
     //Bisogna creare il "posto" per gli assi e quindi i 4 mazzi ausiliari per vincere
-
     public String toString() {
         String result = "";
         for (int i = 0; i < this.gameField.length; i++) {
@@ -249,7 +201,4 @@ public class Game {
         }
         return result;
     }
-
-
-
 }

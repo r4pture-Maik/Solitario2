@@ -21,21 +21,19 @@ public class Main {
 
                 //Pick 1 card from deck
                 case 1:
-                    //System.out.println("Campo di gioco:\n"+solitaire.toString());
-                    //System.out.println("\nI quattro mazzi: \n"+solitaire.toStringFinalGrid());
-                    solitaire.pickCard();solitaire.pickCard();solitaire.pickCard();solitaire.pickCard();solitaire.pickCard();
+                    System.out.println("Campo di gioco:\n"+solitaire.toString());
+                    System.out.println("\nI quattro mazzi: \n"+solitaire.toStringFinalGrid());
+               /*   solitaire.pickCard();solitaire.pickCard();solitaire.pickCard();solitaire.pickCard();solitaire.pickCard();
                     solitaire.pickCard();solitaire.pickCard();solitaire.pickCard();solitaire.pickCard();solitaire.pickCard();
                     solitaire.pickCard();solitaire.pickCard();solitaire.pickCard();solitaire.pickCard();solitaire.pickCard();
                     solitaire.pickCard();solitaire.pickCard();solitaire.pickCard();solitaire.pickCard();solitaire.pickCard();
                     solitaire.pickCard();solitaire.pickCard();solitaire.pickCard();solitaire.pickCard();
-                    solitaire.deckSize();
-                    solitaire.pickCard();
-                    //solitaire.showCard();
+                    solitaire.deckSize();*/
+                    solitaire.showCard();
                     break;
 
                 //Pick card from deck and move to field
                 case 2:
-
                         destRow = input.nextInt();
                         destCol = input.nextInt();
                         solitaire.moveCardFromDeck(destRow, destCol);
@@ -57,7 +55,6 @@ public class Main {
                 case 6:
                     destCol = input.nextInt();
                     solitaire.moveFromDeckToFinalGrid(destCol);
-                    System.out.println(solitaire.whichRow(destCol));
                     System.out.println(solitaire.toString());
                     System.out.println(solitaire.toStringFinalGrid());
                     solitaire.showCard();
