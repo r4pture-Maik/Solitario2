@@ -14,7 +14,7 @@ public class Deck{
         for (Card.Seed seed : Card.Seed.values()) {
             int realValue=0;
             for (Card.Value value : Card.Value.values()) {
-                if (seed == Card.Seed.CUORI || seed == Card.Seed.QUADRI ) {
+                if (seed == Card.Seed.CUORI || seed == Card.Seed.QUADR ) {
                     color = Card.Color.ROSSO;
                 }else color = Card.Color.NERO;
                 realValue++;

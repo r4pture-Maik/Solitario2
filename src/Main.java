@@ -19,6 +19,7 @@ public class Main {
                 //Prende e mostra 1 carta dal deck
                 case 1:
                     System.out.println("Campo di gioco:\n"+solitaire.toString());
+                    solitaire.pickCard();
                     solitaire.showCard();
                 break;
                 //Dal deck al campo
@@ -95,8 +96,12 @@ public class Main {
                 default:
                     System.out.println("Qualcosa è andato storto");
                 break;
+                case 7:
+
+                break;
 
             }
-        }while (!solitaire.win());
+        }while (solitaire.win2());
+        System.out.println("Congratulazioni hai vinto!");
     }
 }

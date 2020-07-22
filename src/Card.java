@@ -1,19 +1,21 @@
 public class Card {
+    enum Seed {CUORI, QUADR, FIORI, PICCH}
 
-    enum Seed{CUORI,QUADRI,FIORI,PICCHE}
-    enum Value{ASSO, DUE,TRE,QUATTRO,CINQUE,SEI,SETTE,OTTO,NOVE, DIECI, FANTE,REGINA,RE}
-    enum Color{ROSSO, NERO}
+    enum Value {A, DUE, TRE, QUATTRO, CINQUE, SEI, SETTE, OTTO, NOVE, DIECI, J, Q, K;}
+
+    enum Color {ROSSO, NERO}
+
     private boolean isHidden;
     private int realCardValue;
     private Seed seeds;
     private Value values;
     private Color color;
-    public Card(Seed seed,Value value, int realCardValue, Color color){
-        this.seeds=seed;
-        this.values=value;
-        this.realCardValue=realCardValue;
-        this.color= color;
-        this.isHidden=true;
+
+    public Card(Seed seed, Value value, int realCardValue, Color color) { this.seeds = seed;
+        this.values = value;
+        this.realCardValue = realCardValue;
+        this.color = color;
+        this.isHidden = true;
     }
 
     public Seed getSeeds() {
@@ -28,11 +30,11 @@ public class Card {
         return realCardValue;
     }
 
-    public Color getColor(){
+    public Color getColor() {
         return color;
     }
 
-    public boolean getHidden(){
+    public boolean getHidden() {
         return isHidden;
     }
 
@@ -42,12 +44,31 @@ public class Card {
 
     @Override
     public String toString() {
-        if (getHidden()){
-            return "-------------";
-        }else {
-            return values + " " +
-                    color.toString() + " " +
-                    seeds;
+        final String ANSI_RED = "\u001B[31m";
+        final String ANSI_RESET = "\u001B[0m";
+        if (getHidden()) {
+            return "---------------";
+        }else if (getColor() == Color.ROSSO) {
+            if (values == Value.A || values == Value.K || values == Value.Q || values == Value.J) {
+                return ANSI_RED + "\" " + values + " " + "DI" + " " +
+                        seeds + " \" " + ANSI_RESET;
+            }else if (getRealCardValue() == 10) {
+                return ANSI_RED + "\"" + getRealCardValue() + " " + "DI" + " " +
+                        seeds + " \" " + ANSI_RESET;
+            } else {
+                return ANSI_RED + "\" " + getRealCardValue() + " " + "DI" + " " +
+                        seeds + " \" " + ANSI_RESET;
+            }
+        }else if (values == Value.A || values == Value.K || values == Value.Q || values == Value.J) {
+            return "\" " + values + " " + "DI" + " " +
+                    seeds + " \" ";
+        }
+        if (getRealCardValue() == 10) {
+            return "\"" + getRealCardValue() + " " + "DI" + " " +
+                    seeds + " \" ";
+        } else {
+            return "\" " + getRealCardValue() + " " + "DI" + " " +
+                    seeds + " \" ";
         }
     }
 }
