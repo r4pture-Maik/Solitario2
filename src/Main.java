@@ -5,7 +5,7 @@ public class Main {
         System.out.println("Campo di gioco: \n "+solitaire.toString());
         Scanner input = new Scanner(System.in);
         do {
-            System.out.println("Eccoti il menu del programma:\n1 prendi una carta\n2 sposta una carta dal mazzo alla griglia\n3 sposti le carte dentro la griglia\n4 sposti le carte dal mazzo alla griglia finale\n5 sposti le carte dalla griglia di gioco a quella finale\n6 resetti la partita");
+            System.out.println("Eccoti il menu del programma:\n1 prendi una carta\n2 sposta una carta dal mazzo alla griglia\n3 sposti le carte dentro la griglia\n4 sposti le carte dal mazzo alla griglia finale\n5 sposti le carte dalla griglia di gioco a quella finale\n6 Ricomincia la partita");
             int destRow, destCol, startRow, startCol, choose=0;
             //Try catch per lo switch case
             try{
@@ -33,6 +33,7 @@ public class Main {
                         System.out.println(solitaire.toString());
                         solitaire.showCard();
                     }catch (Exception e){
+                        input.next();
                         System.out.println("Errore nell'input");
                     }
 
@@ -65,7 +66,7 @@ public class Main {
                         solitaire.moveFromDeckToFinalGrid(destCol);
                         System.out.println(solitaire.toString());
                         solitaire.showCard();
-                    }catch (Exception e){
+                    }catch (Exception ekiuashfiuhasiufhauishfasfasfasf){
                         input.next();
                         System.out.println("Errore nell'input");
                     }
@@ -96,12 +97,9 @@ public class Main {
                 default:
                     System.out.println("Qualcosa è andato storto");
                 break;
-                case 7:
-
-                break;
 
             }
-        }while (solitaire.win2());
+        }while (solitaire.win());
         System.out.println("Congratulazioni hai vinto!");
     }
 }
