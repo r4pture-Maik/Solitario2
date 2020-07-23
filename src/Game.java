@@ -49,16 +49,19 @@ public class Game {
     }
     //Metodo che ritorna true se la carta da muovere sarà posizionata sopra una carta con colore diverso e valore maggiore di 1
     private boolean canMoveCard(Card c, int destRow, int destCol) throws ArrayIndexOutOfBoundsException {
-        if ((destRow == 0 && c.getValues() != Card.Value.K) || (destCol > 6 || destCol < 0) || (destRow > 20 || destRow < 0)) {
+        if ((destCol > 6 || destCol < 0) || (destRow > 20 || destRow < 0)) {
             return false;
-        } else return destRow == 0 && c.getValues() == Card.Value.K
-                ||
-                this.gameField[destRow - 1][destCol] != null &&
-                c != null &&
-                !c.getHidden() &&
-                c.getColor() != this.gameField[destRow - 1][destCol].getColor() &&
-                c.getRealCardValue() == this.gameField[destRow - 1][destCol].getRealCardValue() - 1 &&
-                this.gameField[destRow][destCol] == null;
+        } else return (c != null &&
+                      destRow == 0 &&
+                      c.getValues() == Card.Value.K &&
+                      this.gameField[destRow][destCol]==null)
+                      ||
+                      (destRow !=0 &&
+                      this.gameField[destRow - 1][destCol] != null &&
+                      !c.getHidden() &&
+                      c.getColor() != this.gameField[destRow - 1][destCol].getColor() &&
+                      c.getRealCardValue() == this.gameField[destRow - 1][destCol].getRealCardValue() - 1 &&
+                      this.gameField[destRow][destCol] == null);
     }
     //Dal deck ausiliario al campo di gioco
     public void moveCardFromDeck(int destRow, int destCol){
