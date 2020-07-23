@@ -1,3 +1,5 @@
+import java.io.IOException;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
@@ -11,16 +13,16 @@ public class Main {
             try{
                 choose = input.nextInt();
             }
-            catch (Exception e){
+            catch (InputMismatchException e){
                 System.out.println("Errore input!");
                 input.next(); //pulisce lo scanner
             }
             switch (choose) {
                 //Prende e mostra 1 carta dal deck
                 case 1:
-                    System.out.println("Campo di gioco:\n"+solitaire.toString());
+
                     solitaire.pickCard();
-                    solitaire.showCard();
+                    System.out.println("Campo di gioco:\n"+solitaire.toString());
                 break;
                 //Dal deck al campo
                 case 2:
@@ -31,8 +33,7 @@ public class Main {
                         destCol = input.nextInt();
                         solitaire.moveCardFromDeck(destRow, destCol);
                         System.out.println(solitaire.toString());
-                        solitaire.showCard();
-                    }catch (Exception e){
+                    }catch (InputMismatchException e){
                         input.next();
                         System.out.println("Errore nell'input");
                     }
@@ -52,8 +53,7 @@ public class Main {
                         destCol = input.nextInt();
                         solitaire.moveCards(startRow,startCol,destRow,destCol);
                         System.out.println(solitaire.toString());
-                        solitaire.showCard();
-                    }catch (Exception e){
+                    }catch (InputMismatchException e){
                         input.next();
                         System.out.println("Errore nell'input");
                     }
@@ -65,8 +65,7 @@ public class Main {
                         destCol = input.nextInt();
                         solitaire.moveFromDeckToFinalGrid(destCol);
                         System.out.println(solitaire.toString());
-                        solitaire.showCard();
-                    }catch (Exception ekiuashfiuhasiufhauishfasfasfasf){
+                    }catch (InputMismatchException e){
                         input.next();
                         System.out.println("Errore nell'input");
                     }
@@ -82,8 +81,7 @@ public class Main {
                         destCol = input.nextInt();
                         solitaire.moveCardToFinalGrid(startRow,startCol,destCol);
                         System.out.println("Campo di gioco:\n"+solitaire.toString());
-                        solitaire.showCard();
-                    }catch (Exception e){
+                    }catch (InputMismatchException e){
                         input.next();
                         System.out.println("Errore nell'input");
                     }

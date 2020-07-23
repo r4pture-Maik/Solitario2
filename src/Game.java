@@ -1,7 +1,4 @@
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Stack;
+import java.util.*;
 
 public class Game {
     private LinkedList<Card> gameDeck;
@@ -18,17 +15,6 @@ public class Game {
         Collections.shuffle(gameDeck);
         startGame();
     }
-
-   /* private void startGame2() {
-        this.gameField[0][0] = new Card(Card.Seed.PICCH, Card.Value.A,1, Card.Color.NERO);
-        this.gameField[1][0] = new Card(Card.Seed.PICCH, Card.Value.DUE,2, Card.Color.NERO);
-        this.gameField[2][0] = new Card(Card.Seed.PICCH, Card.Value.TRE,3, Card.Color.NERO);
-        this.gameField[3][0] = new Card(Card.Seed.PICCH, Card.Value.A,1, Card.Color.NERO);
-        this.gameField[4][0] = new Card(Card.Seed.PICCH, Card.Value.DUE,2, Card.Color.NERO);
-        this.gameField[5][0] = new Card(Card.Seed.PICCH, Card.Value.DUE,2, Card.Color.NERO);
-        this.gameField[6][0] = new Card(Card.Seed.PICCH, Card.Value.K,13, Card.Color.NERO);
-        this.gameField[6][0].setHidden(false);
-    }*/
     //Metodo che inizializza la griglia a inizio gioco
     private void startGame() {
         for (int i = 0; i <= 6; i++) {
@@ -41,10 +27,11 @@ public class Game {
         }
     }
     //Mostra se presente l'ultima carta del deck ausiliario
-    public void showCard() {
+    private String showCard() {
         if (!auxDeck.isEmpty()) {
-            System.out.println("Ultima carta pescata: " + auxDeck.peek());
+            return "Ultima carta pescata: " + auxDeck.peek();
         }
+        return "";
     }
     //Pesca una carta dal deck principale al deck ausiliario
     public void pickCard() {
@@ -68,12 +55,13 @@ public class Game {
                 ||
                 this.gameField[destRow - 1][destCol] != null &&
                 c != null &&
+                !c.getHidden() &&
                 c.getColor() != this.gameField[destRow - 1][destCol].getColor() &&
                 c.getRealCardValue() == this.gameField[destRow - 1][destCol].getRealCardValue() - 1 &&
                 this.gameField[destRow][destCol] == null;
     }
     //Dal deck ausiliario al campo di gioco
-    public void moveCardFromDeck(int destRow, int destCol) throws ArrayIndexOutOfBoundsException {
+    public void moveCardFromDeck(int destRow, int destCol){
         if (!this.auxDeck.isEmpty() && canMoveCard(auxDeck.peek(), destRow, destCol)) { //Controlla che il deck non sia vuoto e che la mossa sia valida
             this.gameField[destRow][destCol] = auxDeck.pop();
         } else System.out.println("Mossa non valida");
@@ -107,18 +95,20 @@ public class Game {
         return this.finalDecks.length;
     }
     //Metodo di controllo se può mettere una carta all'interno del deck finale
-    private boolean canMoveToFinalGrid(Card c, int destCol) throws ArrayIndexOutOfBoundsException {
+    private boolean canMoveToFinalGrid(Card c, int destCol){
         int destRow;
-        if ((destCol > 4 || destCol < 0) || (this.finalDecks[0][destCol] == null && c.getValues() != Card.Value.A)) {
+       if ((destCol > 4 || destCol < 0)) {
             return false;
         }   destRow = whichRow(destCol);
-            return (destRow == 0 && c.getValues() == Card.Value.A
+            return (c != null &&
+                    (destRow == 0 && c.getValues() == Card.Value.A)
                     ||
-                    this.finalDecks[destRow][destCol] == null &&
+                    (this.finalDecks[destRow][destCol] == null &&
+                    c != null &&
                     !c.getHidden() &&
                     c.getColor() == this.finalDecks[destRow - 1][destCol].getColor() &&
                     c.getSeeds() == this.finalDecks[destRow - 1][destCol].getSeeds() &&
-                    c.getRealCardValue() == this.finalDecks[destRow - 1][destCol].getRealCardValue() + 1);
+                    c.getRealCardValue() == this.finalDecks[destRow - 1][destCol].getRealCardValue() + 1));
     }
     //Dalla carta pescata al deck finale
     public void moveFromDeckToFinalGrid(int destCol) throws ArrayIndexOutOfBoundsException {
@@ -129,10 +119,10 @@ public class Game {
     //Dal campo alla griglia finale
     public void moveCardToFinalGrid(int rowStart, int colStart, int colDest) {
         int destRow;
-        if ((rowStart >= 0 && rowStart < this.gameField.length)
-            && (colStart >= 0 && colStart < this.gameField[rowStart].length)
-            && (canMoveToFinalGrid(this.gameField[rowStart][colStart], colDest)) //Solito controllo tra la  posizione originale e la finale
-            && this.gameField[rowStart+1][colStart]==null) {
+        if ((rowStart >= 0 && rowStart < this.gameField.length) &&
+            (colStart >= 0 && colStart < this.gameField[rowStart].length) &&
+            (canMoveToFinalGrid(this.gameField[rowStart][colStart], colDest)) && //Solito controllo tra la  posizione originale e la finale
+             this.gameField[rowStart+1][colStart]==null) {
                 if (rowStart > 0) {//Se non siamo nella prima riga
                     this.gameField[rowStart - 1][colStart].setHidden(false);//Imposta la carta precedente come visibile
                 }
@@ -141,7 +131,6 @@ public class Game {
                 this.gameField[rowStart][colStart] = null;//Libera gli slot dove avevamo le carte
             } else System.out.println("Mossa non valida");
     }
-
     //Metodo che controlla se hai vinto o meno
     public boolean win() {
         boolean winFlag = true;
@@ -180,6 +169,6 @@ public class Game {
             }
             finalDecks += "]";
         }
-        return finalDecks + "\n" + result;
+        return finalDecks + "\n" + result+"\n" + showCard();
     }
 }
