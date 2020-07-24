@@ -13,7 +13,36 @@ public class Game {
         finalDecks = new Card[13][4];
         gameDeck = cards.getDeck();
         Collections.shuffle(gameDeck);
-        startGame();
+        startGame2();
+    }
+    private void startGame2() {
+        this.finalDecks[0][0]=new Card(Card.Seed.PICCH, Card.Value.A,1, Card.Color.NERO);
+        this.finalDecks[0][0].setHidden(false);
+        this.finalDecks[1][0]=new Card(Card.Seed.PICCH, Card.Value.DUE,2, Card.Color.NERO);
+        this.finalDecks[1][0].setHidden(false);
+        this.finalDecks[2][0]=new Card(Card.Seed.PICCH, Card.Value.TRE,3, Card.Color.NERO);
+        this.finalDecks[2][0].setHidden(false);
+        this.finalDecks[3][0]=new Card(Card.Seed.PICCH, Card.Value.QUATTRO,4, Card.Color.NERO);
+        this.finalDecks[3][0].setHidden(false);
+        this.finalDecks[4][0]=new Card(Card.Seed.PICCH, Card.Value.CINQUE,5, Card.Color.NERO);
+        this.finalDecks[4][0].setHidden(false);
+        this.finalDecks[5][0]=new Card(Card.Seed.PICCH, Card.Value.SEI,6, Card.Color.NERO);
+        this.finalDecks[5][0].setHidden(false);
+        this.finalDecks[6][0]=new Card(Card.Seed.PICCH, Card.Value.SETTE,7, Card.Color.NERO);
+        this.finalDecks[6][0].setHidden(false);
+        this.finalDecks[7][0]=new Card(Card.Seed.PICCH, Card.Value.OTTO,8, Card.Color.NERO);
+        this.finalDecks[7][0].setHidden(false);
+        this.finalDecks[8][0]=new Card(Card.Seed.PICCH, Card.Value.NOVE,9, Card.Color.NERO);
+        this.finalDecks[8][0].setHidden(false);
+        this.finalDecks[9][0]=new Card(Card.Seed.PICCH, Card.Value.DIECI,10, Card.Color.NERO);
+        this.finalDecks[9][0].setHidden(false);
+        this.finalDecks[10][0]=new Card(Card.Seed.PICCH, Card.Value.J,11, Card.Color.NERO);
+        this.finalDecks[10][0].setHidden(false);
+        this.finalDecks[11][0]=new Card(Card.Seed.PICCH, Card.Value.Q,12, Card.Color.NERO);
+        this.finalDecks[11][0].setHidden(false);
+        this.finalDecks[12][0]=new Card(Card.Seed.PICCH, Card.Value.K,13, Card.Color.NERO);
+        this.finalDecks[12][0].setHidden(false);
+
     }
     //Metodo che inizializza la griglia a inizio gioco
     private void startGame() {
@@ -49,10 +78,9 @@ public class Game {
     }
     //Metodo che ritorna true se la carta da muovere sarà posizionata sopra una carta con colore diverso e valore maggiore di 1
     private boolean canMoveCard(Card c, int destRow, int destCol) throws ArrayIndexOutOfBoundsException {
-        if ((destCol > 6 || destCol < 0) || (destRow > 20 || destRow < 0)) {
+        if (c == null || (destCol > 6 || destCol < 0) || (destRow > 20 || destRow < 0)) {
             return false;
-        } else return (c != null &&
-                      destRow == 0 &&
+        } else return (destRow == 0 &&
                       c.getValues() == Card.Value.K &&
                       this.gameField[destRow][destCol]==null)
                       ||
@@ -95,19 +123,19 @@ public class Game {
                 }
             }
         }
-        return this.finalDecks.length;
+        return this.finalDecks.length-1;
     }
     //Metodo di controllo se può mettere una carta all'interno del deck finale
     private boolean canMoveToFinalGrid(Card c, int destCol){
         int destRow;
-       if ((destCol > 4 || destCol < 0)) {
+       if (c == null || (destCol > 3 || destCol < 0)) {
             return false;
         }   destRow = whichRow(destCol);
-            return (c != null &&
-                    (destRow == 0 && c.getValues() == Card.Value.A)
+        System.out.println(destRow);
+            return ((destRow == 0 && c.getValues() == Card.Value.A)
                     ||
-                    (this.finalDecks[destRow][destCol] == null &&
-                    c != null &&
+                    (destRow!=0 &&
+                    this.finalDecks[destRow][destCol] == null &&
                     !c.getHidden() &&
                     c.getColor() == this.finalDecks[destRow - 1][destCol].getColor() &&
                     c.getSeeds() == this.finalDecks[destRow - 1][destCol].getSeeds() &&
