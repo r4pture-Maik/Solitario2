@@ -25,12 +25,5 @@ public class Deck{
     public LinkedList getDeck(){
         return this.cardDeck;
     }
-    public String showDeck(){
-        String showDeck="";
-        for(int x=0; x<this.cardDeck.size();x++){
-            showDeck+=this.cardDeck.get(x).toString();
-        }
-        return showDeck;
-    }
 
 }

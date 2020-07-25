@@ -19,7 +19,6 @@ public class Main {
             switch (choose) {
                 //Prende e mostra 1 carta dal deck
                 case 1:
-
                     solitaire.pickCard();
                     System.out.println("Campo di gioco:\n"+solitaire.toString());
                 break;
@@ -62,7 +61,7 @@ public class Main {
                     try {
                         System.out.println("Inserisci colonna della griglia finale");
                         destCol = input.nextInt();
-                        solitaire.moveFromDeckToFinalGrid(destCol);
+                        solitaire.moveFromDeckToFinalDecks(destCol);
                         System.out.println(solitaire.toString());
                     }catch (InputMismatchException e){
                         input.next();
@@ -78,7 +77,7 @@ public class Main {
                         startCol = input.nextInt();
                         System.out.println("Inserisci colonna della griglia finale");
                         destCol = input.nextInt();
-                        solitaire.moveCardToFinalGrid(startRow,startCol,destCol);
+                        solitaire.moveCardToFinalDecks(startRow,startCol,destCol);
                         System.out.println("Campo di gioco:\n"+solitaire.toString());
                     }catch (InputMismatchException e){
                         input.next();
