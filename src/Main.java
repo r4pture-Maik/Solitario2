@@ -6,7 +6,7 @@ public class Main {
         System.out.println("Campo di gioco: \n "+solitaire.toString());
         Scanner input = new Scanner(System.in);
         do {
-            System.out.println("Eccoti il menu del programma:\n1 prendi una carta\n2 sposta una carta dal mazzo alla griglia\n3 sposti le carte dentro la griglia\n4 sposti le carte dal mazzo alla griglia finale\n5 sposti le carte dalla griglia di gioco a quella finale\n6 Ricomincia la partita");
+            System.out.println("Eccoti il menu del programma:\n1 prendi una carta\n2 sposta una carta dal mazzo alla griglia\n3 sposti le carte dentro la griglia\n4 sposti le carte dal mazzo alla griglia finale\n5 sposti le carte dalla griglia di gioco a quella finale\n6 Ricomincia la partita\n7 Per uscire");
             int destRow, destCol, startRow, startCol, choose=0;
             //Try catch per lo switch case
             try{
