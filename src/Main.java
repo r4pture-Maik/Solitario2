@@ -89,6 +89,10 @@ public class Main {
                     solitaire=new Game();
                     System.out.println("Campo di gioco:\n"+solitaire.toString());
                 break;
+                case 7:
+                    System.out.println("Grazie di aver giocato!");
+                    System.exit(0);
+                break;
                 //Default nel caso di input erronei
                 default:
                     System.out.println("Qualcosa è andato storto");
